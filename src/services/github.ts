@@ -7,6 +7,7 @@ type RawRepo = {
   description: string
   created_at: string
   stargazers_count: number
+  html_url: string
 }
 
 const BASE_URL = 'https://api.github.com'
@@ -41,7 +42,8 @@ export const GithubService = {
         name: item.name,
         description: item.description,
         created_at: item.created_at,
-        starsCount: item.stargazers_count
+        starsCount: item.stargazers_count,
+        url: item.html_url
       }
     }) as Repo[]
   }

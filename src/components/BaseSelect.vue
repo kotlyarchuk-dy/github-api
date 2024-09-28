@@ -23,8 +23,6 @@ const filteredOptions = computed(() =>
 )
 
 const onOptionSelect = (option: string) => {
-  console.error('option', option)
-
   selectedOption.value = null
   query.value = ''
   emit('select', option)

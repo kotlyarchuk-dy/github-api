@@ -12,7 +12,7 @@ const repos = computed(() => reposStore.reposByLanguage(props.language))
 
 <template>
   <div
-    class="h-72 w-80 p-5 bg-slate-100 divide-y divide-gray-200 overflow-y-auto rounded-lg shadow"
+    class="h-[400px] w-80 p-5 bg-slate-100 divide-y divide-gray-200 overflow-y-auto rounded-lg shadow"
   >
     <div class="mb-5 text-sm font-medium text-gray-900">{{ language }}</div>
     <RepoItem v-for="repo in repos" :repo="repo" :key="repo.id" />

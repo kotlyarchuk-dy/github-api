@@ -6,6 +6,7 @@ export type Repo = {
   description: string
   createdAt: string
   starsCount: number
+  url: string
 }
 
 export type Lang = (typeof langs)[number]
