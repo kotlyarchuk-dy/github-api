@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { GithubService } from '@/services/github'
-import type { Repo } from '@/types'
+import { useReposStore } from '@/stores/repos'
 
-const repos = ref<Repo[]>([])
+const reposStore = useReposStore()
 
 const onSearchClick = async () => {
-  const reposFound = await GithubService.getRepos()
-  repos.value = reposFound
+  await GithubService.searchByLanguageList(['C', 'JavaScript', 'Python', 'Kotlin', 'PHP'])
 }
 </script>
 
@@ -17,12 +15,18 @@ const onSearchClick = async () => {
       <div>Filters</div>
       <button @click="onSearchClick">Search</button>
     </div>
-    <div class="content flex-grow overflow-auto">
-      <div>Content</div>
-      <div v-for="repo in repos" :key="repo.id">
-        <div>Name - {{ repo.name }}</div>
-        <div>Description - {{ repo.description }}</div>
-        <div>Stars - {{ repo.starsCount }}</div>
+    <div class="flex-grow overflow-auto">
+      <div class="flex flex-wrap gap-5">
+        <div
+          v-for="(repos, language) in reposStore.reposByLanguage"
+          :key="language"
+          class="h-72 w-60 overflow-y-auto border border-slate-400 rounded-lg p-5"
+        >
+          <div class="pb-5">{{ language }}</div>
+          <div v-for="{ id, name } in repos" :key="id" class="pb-3">
+            <div>{{ name }}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

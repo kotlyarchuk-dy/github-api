@@ -1,0 +1,20 @@
+export const langs = [
+  'JavaScript',
+  'TypeScript',
+  'Python',
+  'Java',
+  'C#',
+  'C++',
+  'C',
+  'PHP',
+  'Ruby',
+  'Swift',
+  'Kotlin',
+  'Go',
+  'Rust',
+  'Scala',
+  'Perl',
+  'R',
+  'Haskell',
+  'Lua'
+] as const
