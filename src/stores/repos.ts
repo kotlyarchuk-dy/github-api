@@ -1,13 +1,15 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { ReposByLanguage } from '@/types'
+import type { ReposByLanguage, Lang } from '@/types'
 
 export const useReposStore = defineStore('repos', () => {
-  const reposByLanguage = ref<ReposByLanguage>({})
+  const collection = ref<ReposByLanguage>({})
+  const languages = computed<Lang[]>(() => Object.keys(collection.value) as Lang[])
+  const reposByLanguage = computed(() => (lang: Lang) => collection.value[lang])
 
   const setRepos = (repos: ReposByLanguage) => {
-    reposByLanguage.value = repos
+    collection.value = repos
   }
 
-  return { reposByLanguage, setRepos }
+  return { collection, reposByLanguage, languages, setRepos }
 })

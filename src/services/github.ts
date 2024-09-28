@@ -29,7 +29,8 @@ export const GithubService = {
     const queryString = new URLSearchParams({
       q: `language:${lang}`,
       sort: 'stars',
-      order: 'desc'
+      order: 'desc',
+      per_page: '10'
     })
     const response = await fetch(`${BASE_URL}/search/repositories?${queryString}`)
     const json = await response.json()
