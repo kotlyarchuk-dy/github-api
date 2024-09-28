@@ -7,7 +7,7 @@ const onCloseClick = () => emit('remove')
 
 <template>
   <span
-    class="inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 mr-2 px-2 py-1 text-xs font-medium text-blue-700"
+    class="inline-flex items-center gap-x-0.5 rounded-md bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700"
   >
     {{ text }}
     <button

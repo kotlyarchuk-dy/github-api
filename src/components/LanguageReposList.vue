@@ -6,7 +6,7 @@ const reposStore = useReposStore()
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-5">
+  <div class="flex flex-wrap gap-5 p-5">
     <LanguageBlock v-for="language in reposStore.languages" :language="language" :key="language" />
   </div>
 </template>
