@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FiltersPanel from '@/components/filters-panel/FiltersPanel.vue'
 import SearchResult from '@/components/search-result/SearchResult.vue'
+import NotificationPanel from '@/components/NotificationPanel.vue'
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import SearchResult from '@/components/search-result/SearchResult.vue'
     <div class="flex-grow overflow-auto bg-slate-200">
       <SearchResult />
     </div>
+    <NotificationPanel />
   </div>
 </template>
 

@@ -1,4 +1,5 @@
 import { useReposStore } from '@/stores/repos'
+import { useAppStore } from '@/stores/app'
 import type { Repo, Lang, ReposByLanguage } from '@/types'
 
 type RawRepo = {
@@ -26,16 +27,21 @@ export const GithubService = {
   async fetchReposByFilter(filters: Filters) {
     const { languages } = filters
     const promises = languages.map((language) => searchByLanguage(language, filters))
-    const results = await Promise.all(promises)
+    try {
+      const results = await Promise.all(promises)
 
-    const reposByLanguage: ReposByLanguage = {}
-    languages.forEach((language, index) => {
-      reposByLanguage[language] = results[index]
-    })
+      const reposByLanguage: ReposByLanguage = {}
+      languages.forEach((language, index) => {
+        reposByLanguage[language] = results[index]
+      })
 
-    const reposStore = useReposStore()
-    reposStore.setRepos(reposByLanguage)
-    lastUsedFilters = { ...filters }
+      const reposStore = useReposStore()
+      reposStore.setRepos(reposByLanguage)
+      lastUsedFilters = { ...filters }
+    } catch (error) {
+      const appStore = useAppStore()
+      appStore.setError('Failed to fetch repositories')
+    }
   },
 
   async fetchMoreRepos(language: Lang) {
@@ -51,13 +57,16 @@ export const GithubService = {
     const page = Math.ceil(repos.length / ITEMS_PER_PAGE) + 1
 
     const queryString = buildQueryString(language, lastUsedFilters, page)
-    const response = await fetch(`${BASE_URL}/search/repositories?${queryString}`).catch(() => {
-      throw new Error('Failed to fetch more repositories.')
-    })
-    const json = await response.json()
-    const newRepos = json.items.map(prepareRepoItem) as Repo[]
+    try {
+      const response = await fetch(`${BASE_URL}/search/repositories?${queryString}`)
+      const json = await response.json()
+      const newRepos = json.items.map(prepareRepoItem) as Repo[]
 
-    reposStore.addRepos(language, newRepos)
+      reposStore.addRepos(language, newRepos)
+    } catch (error) {
+      const appStore = useAppStore()
+      appStore.setError('Failed to fetch more repositories')
+    }
   },
 
   hasNextPage(language: Lang): boolean {
