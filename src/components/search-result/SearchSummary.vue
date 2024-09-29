@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { GithubService } from '@/services/github'
+import { formatDate } from '@/utils/date'
 
 const { fromDate, toDate, minStars } = GithubService.getLastUsedFilters()!
 const dateRangePhrase = computed(() => {
   if (fromDate && toDate) {
-    return `between ${prepareDate(fromDate)} and ${prepareDate(toDate)}`
+    return `between ${formatDate(fromDate)} and ${formatDate(toDate)}`
   } else if (fromDate) {
-    return `after ${prepareDate(fromDate)}`
+    return `after ${formatDate(fromDate)}`
   } else if (toDate) {
-    return `before ${prepareDate(toDate)}`
+    return `before ${formatDate(toDate)}`
   } else {
     return ''
   }
@@ -18,12 +19,6 @@ const dateRangePhrase = computed(() => {
 const minStarsPhrase = computed(() => {
   return `with at least ${minStars} stars`
 })
-
-const prepareDate = (date: string) => {
-  const [year, month, day] = date.split('-')
-
-  return `${day}.${month}.${year}`
-}
 </script>
 
 <template>

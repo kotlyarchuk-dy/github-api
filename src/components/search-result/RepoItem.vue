@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { StarIcon } from '@heroicons/vue/20/solid'
 import type { Repo } from '@/types'
+import { formatDate } from '@/utils/date'
 
 defineProps<{ repo: Repo }>()
 </script>
@@ -16,7 +17,10 @@ defineProps<{ repo: Repo }>()
         class="h-4 w-4 mr-1 text-indigo-300 group-hover:text-indigo-500"
         aria-hidden="true"
       />
-      <div class="text-sm text-gray-500 group-hover:text-gray-800">{{ repo.starsCount }}</div>
+      <div class="mr-4 text-sm text-gray-500 group-hover:text-gray-800">{{ repo.starsCount }}</div>
+      <div class="text-sm text-gray-400 group-hover:text-gray-700">
+        {{ formatDate(repo.createdAt) }}
+      </div>
     </div>
   </a>
 </template>
