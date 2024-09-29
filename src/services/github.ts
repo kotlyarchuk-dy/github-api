@@ -72,6 +72,10 @@ export const GithubService = {
     }
 
     return repos.length % ITEMS_PER_PAGE === 0
+  },
+
+  getLastUsedFilters() {
+    return lastUsedFilters
   }
 }
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useFiltersStore } from '@/stores/filters'
 import { useAppStore } from '@/stores/app'
 import { GithubService } from '@/services/github'
@@ -10,7 +11,15 @@ import StarsInput from './StarsInput.vue'
 const filtersStore = useFiltersStore()
 const appStore = useAppStore()
 
+const buttonDisabled = computed(() => {
+  return appStore.isLoading || filtersStore.languages.length === 0
+})
+
 const onSearchClick = async () => {
+  if (appStore.isLoading) {
+    return
+  }
+
   appStore.setLoading(true)
   await GithubService.fetchReposByFilter({
     languages: filtersStore.languages,
@@ -33,7 +42,11 @@ const onSearchClick = async () => {
   <div class="mb-5">
     <StarsInput />
   </div>
-  <BaseButton text="Search" @click="onSearchClick" />
+  <BaseButton
+    text="Search"
+    @click="onSearchClick"
+    :class="{ 'cursor-not-allowed opacity-50': buttonDisabled }"
+  />
 </template>
 
 <style scoped></style>
