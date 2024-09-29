@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { ReposByLanguage, Lang } from '@/types'
+import type { ReposByLanguage, Lang, Repo } from '@/types'
 
 export const useReposStore = defineStore('repos', () => {
   const collection = ref<ReposByLanguage>({})
@@ -11,5 +11,12 @@ export const useReposStore = defineStore('repos', () => {
     collection.value = repos
   }
 
-  return { collection, reposByLanguage, languages, setRepos }
+  const addRepos = (language: Lang, repos: Repo[]) => {
+    if (!collection.value[language]) {
+      collection.value[language] = []
+    }
+    collection.value[language].push(...repos)
+  }
+
+  return { collection, reposByLanguage, languages, setRepos, addRepos }
 })

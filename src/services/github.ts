@@ -20,19 +20,58 @@ type Filters = {
 const BASE_URL = 'https://api.github.com'
 const ITEMS_PER_PAGE = 10
 
+let lastUsedFilters: Filters | null = null
+
 export const GithubService = {
   async fetchReposByFilter(filters: Filters) {
     const { languages } = filters
     const promises = languages.map((language) => searchByLanguage(language, filters))
     const results = await Promise.all(promises)
-    const reposByLanguage: ReposByLanguage = {}
 
+    const reposByLanguage: ReposByLanguage = {}
     languages.forEach((language, index) => {
       reposByLanguage[language] = results[index]
     })
 
     const reposStore = useReposStore()
     reposStore.setRepos(reposByLanguage)
+    lastUsedFilters = { ...filters }
+  },
+
+  async fetchMoreRepos(language: Lang) {
+    if (!lastUsedFilters) {
+      throw new Error('No filters available. Please fetch repositories first.')
+    }
+
+    const reposStore = useReposStore()
+    const repos = reposStore.reposByLanguage(language)
+    if (!repos) {
+      throw new Error('No repositories available for this language.')
+    }
+    const page = Math.ceil(repos.length / ITEMS_PER_PAGE) + 1
+
+    const queryString = buildQueryString(language, lastUsedFilters, page)
+    const response = await fetch(`${BASE_URL}/search/repositories?${queryString}`).catch(() => {
+      throw new Error('Failed to fetch more repositories.')
+    })
+    const json = await response.json()
+    const newRepos = json.items.map(prepareRepoItem) as Repo[]
+
+    reposStore.addRepos(language, newRepos)
+  },
+
+  hasNextPage(language: Lang): boolean {
+    if (!lastUsedFilters) {
+      return false
+    }
+
+    const reposStore = useReposStore()
+    const repos = reposStore.reposByLanguage(language)
+    if (!repos) {
+      throw new Error('No repositories available for this language.')
+    }
+
+    return repos.length % ITEMS_PER_PAGE === 0
   }
 }
 
@@ -55,7 +94,7 @@ const prepareRepoItem = (item: RawRepo): Repo => {
   }
 }
 
-const buildQueryString = (lang: Lang, filters: Filters) => {
+const buildQueryString = (lang: Lang, filters: Filters, page?: number) => {
   const { fromDate, toDate, minStars } = filters
   let query = `language:${lang}`
   if (fromDate && toDate) {
@@ -70,10 +109,16 @@ const buildQueryString = (lang: Lang, filters: Filters) => {
     query += ` stars:>${minStars}`
   }
 
-  return new URLSearchParams({
+  const searchParams = new URLSearchParams({
     q: query,
     sort: 'stars',
     order: 'desc',
     per_page: ITEMS_PER_PAGE.toString()
-  }).toString()
+  })
+
+  if (page) {
+    searchParams.set('page', page.toString())
+  }
+
+  return searchParams.toString()
 }
