@@ -1,10 +1,12 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { nextTick } from 'vue'
+import { vi, describe, it, expect, beforeEach, afterEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
 import FiltersPanel from '@/components/filters-panel/FiltersPanel.vue'
 import { useFiltersStore } from '@/stores/filters'
+import { GithubService } from '@/services/github'
 import { setActivePinia, createPinia } from 'pinia'
 
-describe('RepoFilterComponent.vue', () => {
+describe('FiltersPanel', () => {
   let filtersStore: ReturnType<typeof useFiltersStore>
 
   beforeEach(() => {
@@ -95,4 +97,68 @@ describe('RepoFilterComponent.vue', () => {
       expect(filtersStore.minStars).toBe(0)
     })
   })
+
+  describe('search button', () => {
+    let mockFetchReposByFilter: Mock
+    beforeEach(() => {
+      mockFetchReposByFilter = vi.fn()
+      GithubService.fetchReposByFilter = mockFetchReposByFilter
+    })
+
+    afterEach(() => {
+      vi.clearAllMocks()
+    })
+
+    it('is disabled when no languages are selected', () => {
+      const wrapper = mount(FiltersPanel)
+      const button = wrapper.find('button')
+
+      expect(button.attributes('disabled')).toBe('')
+    })
+
+    it('is enabled when at least one language is selected', async () => {
+      const wrapper = mount(FiltersPanel)
+      const button = wrapper.find('button')
+
+      filtersStore.addLanguage('JavaScript')
+      await nextTick()
+
+      expect(button.attributes('disabled')).toBe(undefined)
+    })
+
+    it('is disabled when request is in progress', async () => {
+      const wrapper = mount(FiltersPanel)
+      const button = wrapper.find('button')
+
+      filtersStore.addLanguage('JavaScript')
+      await nextTick()
+
+      expect(button.attributes('disabled')).toBe(undefined)
+
+      mockFetchReposByFilter.mockResolvedValueOnce('')
+      await button.trigger('click')
+
+      expect(button.attributes('disabled')).toBe('')
+    })
+
+    it('is enabled when request ends', async () => {
+      const wrapper = mount(FiltersPanel)
+      const button = wrapper.find('button')
+
+      filtersStore.addLanguage('JavaScript')
+      await nextTick()
+
+      expect(button.attributes('disabled')).toBe(undefined)
+
+      mockFetchReposByFilter.mockResolvedValueOnce('')
+      await button.trigger('click')
+
+      // Wait for the next tick to allow the button to be enabled
+      await wait(0)
+
+      expect(button.attributes('disabled')).toBe(undefined)
+    })
+  })
 })
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

@@ -46,6 +46,7 @@ const onSearchClick = async () => {
     text="Search"
     @click="onSearchClick"
     :class="{ 'cursor-not-allowed opacity-50': buttonDisabled }"
+    :disabled="buttonDisabled"
   />
 </template>
 
