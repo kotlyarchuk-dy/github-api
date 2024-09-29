@@ -58,7 +58,9 @@ describe('GithubService', () => {
 
     await GithubService.fetchReposByFilter(filters)
 
-    const encodedExpectedString = encodeURIComponent('language:JavaScript')
+    const encodedExpectedString = encodeURIComponent(
+      'language:JavaScript created:>2021-01-01 stars:>50'
+    ).replace(/%20/g, '+')
     expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(encodedExpectedString))
     expect(reposStoreMock.setRepos).toHaveBeenCalledWith({
       JavaScript: [
