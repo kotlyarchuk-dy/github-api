@@ -17,11 +17,11 @@ const onToDateChange = (event: Event) => {
 <template>
   <div class="flex flex-row items-center mb-2">
     <div class="inline-block w-10 text-sm text-gray-600">From</div>
-    <input type="date" @change="onFromDateChange" class="input" />
+    <input type="date" @change="onFromDateChange" class="input" data-test-id="fromDate" />
   </div>
   <div class="flex flex-row items-center">
     <div class="inline-block w-10 text-sm text-gray-600">To</div>
-    <input type="date" @change="onToDateChange" class="input" />
+    <input type="date" @change="onToDateChange" class="input" data-test-id="toDate" />
   </div>
 </template>
 

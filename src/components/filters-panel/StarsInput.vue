@@ -25,6 +25,7 @@ const onMinStarsChange = (event: Event) => {
       class="input w-24"
       placeholder="0"
       min="0"
+      data-test-id="minStars"
     />
     <div class="ml-2 text-sm text-gray-600">stars</div>
   </div>
