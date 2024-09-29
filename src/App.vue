@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import FiltersPanel from '@/components/FiltersPanel.vue'
-import LanguageReposList from './components/LanguageReposList.vue'
+import FiltersPanel from '@/components/filters-panel/FiltersPanel.vue'
+import SearchResult from '@/components/search-result/SearchResult.vue'
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import LanguageReposList from './components/LanguageReposList.vue'
       <FiltersPanel />
     </div>
     <div class="flex-grow overflow-auto bg-slate-200">
-      <LanguageReposList />
+      <SearchResult />
     </div>
   </div>
 </template>

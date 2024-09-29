@@ -13,5 +13,32 @@ export const useFiltersStore = defineStore('filters', () => {
     languages.value = languages.value.filter((l) => l !== lang)
   }
 
-  return { languages, addLanguage, removeLanguage }
+  const fromDate = ref<string | null>(null)
+  const toDate = ref<string | null>(null)
+
+  const setFromDate = (date: string) => {
+    fromDate.value = date
+  }
+
+  const setToDate = (date: string) => {
+    toDate.value = date
+  }
+
+  const minStars = ref<number>(0)
+
+  const setMinStars = (stars: number) => {
+    minStars.value = stars
+  }
+
+  return {
+    languages,
+    addLanguage,
+    removeLanguage,
+    fromDate,
+    toDate,
+    setFromDate,
+    setToDate,
+    minStars,
+    setMinStars
+  }
 })
