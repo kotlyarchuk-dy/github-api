@@ -14,18 +14,20 @@ const isEmpty = computed(() => reposStore.languages.length === 0)
 </script>
 
 <template>
-  <LoadingState v-if="appStore.isLoading" />
-  <EmptyState v-else-if="isEmpty" />
-  <div v-else class="p-5">
-    <SearchSummary class="mb-5" />
-    <div class="flex flex-wrap gap-5">
-      <LanguageBlock
-        v-for="language in reposStore.languages"
-        :language="language"
-        :key="language"
-      />
+  <Transition name="fade" mode="out-in">
+    <LoadingState v-if="appStore.isLoading" />
+    <EmptyState v-else-if="isEmpty" />
+    <div v-else class="p-5">
+      <SearchSummary class="mb-5" />
+      <div class="flex flex-wrap gap-5">
+        <LanguageBlock
+          v-for="language in reposStore.languages"
+          :language="language"
+          :key="language"
+        />
+      </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped></style>

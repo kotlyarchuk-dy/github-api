@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { useAppStore } from '@/stores/app'

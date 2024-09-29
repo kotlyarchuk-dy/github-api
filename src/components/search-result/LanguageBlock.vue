@@ -11,8 +11,8 @@ import type { Lang } from '@/types'
 const reposStore = useReposStore()
 const props = defineProps<{ language: Lang }>()
 
-const repos = computed(() => reposStore.reposByLanguage(props.language))
-const isEmpty = computed(() => repos.value?.length === 0)
+const repos = computed(() => reposStore.reposByLanguage(props.language)!)
+const isEmpty = computed(() => repos.value.length === 0)
 
 const isLoading = ref(false)
 const hasNextPage = () => {
